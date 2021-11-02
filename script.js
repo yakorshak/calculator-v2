@@ -7,12 +7,6 @@ const deleteButton = document.querySelector('.button__delete');
 let previousOperand;
 let currentOperand;
 
-
-function movePreviousOperand(currentOperand){
-    const output = document.querySelector('.previous-operand');
-    output.append(currentOperand);
-}
-
 function getPreviousSymbol(){
     const output = document.querySelector('.previous-operand');
     outputValue = output.innerHTML;
@@ -20,18 +14,22 @@ function getPreviousSymbol(){
     return lastSymbol;
 }
 
-function showCurrentOperand(buttonValue){
-   const output = document.querySelector('.current-operand');
-   output.append(buttonValue);
-
-}
-
 function getPreviousOperand() {
     const output = document.querySelector('.previous-operand');
     outputValue = output.innerHTML;
     operand = outputValue.slice(0, -1);
+    console.log(operand);
     return operand;
+}
 
+function moveInPreviousOperandSection(currentOperand){
+    const output = document.querySelector('.previous-operand');
+    output.append(currentOperand);
+}
+
+function showCurrentOperand(buttonValue){
+   const output = document.querySelector('.current-operand');
+   output.append(buttonValue);
 }
 
 function getCurrentOperand() {
@@ -58,7 +56,6 @@ function clearPreviousOutput(){
     previousOutput.innerHTML = "";
 }
 
-
 function clearOutput(){
     const outputCurrentObject = document.querySelector('.current-operand');
     outputCurrentObject.innerHTML = "";
@@ -70,7 +67,6 @@ function deleteLastDigit(){
     let outputWithoutLastDigit = outputElements.substring(0, outputElements.length - 1);
     return outputWithoutLastDigit;
 }
-
 
 culculatorElements.addEventListener('click', function(event){
     if (event.target.closest('.button__number')) {
@@ -84,7 +80,7 @@ operationButtons.addEventListener('click', function(event) {
         buttonValue = getInputSympol(event);
         showCurrentOperand(buttonValue);
         let currentOperand = getCurrentOperand();
-        movePreviousOperand(currentOperand);
+        moveInPreviousOperandSection(currentOperand);
         clearOutput();
     }
 } );
@@ -103,38 +99,41 @@ calculationResultButton.addEventListener('click', function(event) {
             case '*':
             result = previousOperand * currentOperand;
             showResult(result);
-            clearPreviousOutput(); // if need to clear previous operand
+            clearPreviousOutput(); 
             break;
             case '-':
             result = previousOperand - currentOperand;
             showResult(result);
+            clearPreviousOutput();
             break;
             case '/':
             result = previousOperand / currentOperand;
             showResult(result);
+            clearPreviousOutput();
             break;
             case '+':
-            result = previousOperand + currentOperand;
+            result = parseFloat(previousOperand) + parseFloat(currentOperand);
             showResult(result);
+            clearPreviousOutput();
             break;
         }
     }
 } );
 
-
-
-
 deleteButton.addEventListener('click', function(event) {
     if (event.target.closest('.button__delete')){
        let result = deleteLastDigit();
+       console.log(result);
        clearOutput();
-       showOutputValue(result);
+       showCurrentOperand(result);
+
+       //нужно дописать дальше
 }
 } );
-
 
 allClearButton.addEventListener('click', function(event) {
     if (event.target.closest('.button__all-clear')){
         clearOutput();
+        clearPreviousOutput();
     }
 } );
